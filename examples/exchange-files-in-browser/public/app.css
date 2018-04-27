@@ -1,3 +1,8 @@
+
+/* ===========================================================================
+   Layout
+   =========================================================================== */
+
 * {
   box-sizing: border-box;
 }
@@ -36,78 +41,39 @@ header {
   filter: none;
 }
 
-.dragover-popup {
-  position: fixed;
-  top: 0.5em;
-  left: 0.5em;
-  width: calc(100% - 1em);
-  height: calc(100% - 1em);
-  background-color: rgba(0, 0, 0, 0.5);
-  display: none;
-  pointer-events: none;
-}
-
-.dragover-popup h1 {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) 
-}
-
-body.dragging main,
-body.dragging header {
-  filter: blur(5px);
-}
-
-body.dragging .dragover-popup {
-  display: block;
-}
-
 header {
-  text-align: center;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 3em 0;
+  padding: 2em 0;
 }
 
-ul {
-  margin: 0;
-  padding: 0;
-  list-style: none;
+.columns {
+  display: flex;
+  justify-content: space-between;
 }
 
-ul li {
-  margin: 1em 0;
-  font-size: 0.7em;
-  font-family: monospace;
-  word-wrap: break-word;
+main {
+  width: 90%;
+  margin: 0 auto;
 }
+
+/* ===========================================================================
+   Buttons & Inputs
+   =========================================================================== */
 
 button {
-  background-color: rgba(0,0,0,0.2);
+  background-color: rgba(0, 0, 0, 0.2);
   color: #6acad1;
   border: 2px solid #6acad1;
-  font-size: 1em;
+  font-size: 0.9em;
   padding: 0.625em 1.5em;
-  border-radius: 0.125em;
-  margin: .5em 0;
-}
-
-button.full {
-  margin-right: 0;
-  margin-left: 0;
-  width: 100%;
 }
 
 button:hover {
   color: white;
   border: 2px solid white;
   cursor: pointer;
-}
-
-.address {
-  font-family: monospace
 }
 
 .disabled *,
@@ -118,13 +84,14 @@ button:disabled {
 
 input {
   width: 100%;
-  border: 2px solid rgba(0,0,0,0.2);
+  border: 2px solid rgba(0, 0, 0, 0.2);
   color: black;
   padding: 0.7em;
-  border-radius: 2px;
 }
 
-input:hover, input:focus, input:active {
+input:hover,
+input:focus,
+input:active {
   border-color: #6acad1;
 }
 
@@ -132,28 +99,63 @@ input, button {
   outline: none;
 }
 
-main {
-  width: 90%;
-  margin: 0 auto;
-}
-
-.buttons,
-.columns {
+.input-button {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
 }
 
-.buttons > button,
-.columns > div {
-  width: calc(50% - 0.5em);
+.input-button > input {
+  flex: 1 1 0.7;
 }
 
-.buttons > button {
-  margin: 0 0 1em;
+.input-button > button {
+  flex: 1 1 0.3;
 }
+
+/* ===========================================================================
+   Tables
+   =========================================================================== */
+
+table {
+  width: 100%;
+  margin: 1em 0;
+  word-break: break-all;
+}
+
+table thead {
+  background-color: rgba(255, 255, 255, 0.1);
+  font-size: 0.8em;
+}
+
+table th,
+table td {
+  padding: 0.5em 0;
+}
+
+table td {
+  text-align: center;
+  font-family: monospace;
+  font-size: 0.8em;
+}
+
+table tr:hover {
+  background-color: rgba(0, 0, 0, 0.2)
+}
+
+tr:nth-child(even) {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+table a {
+  color: inherit;
+}
+
+/* ===========================================================================
+   Box
+   =========================================================================== */
 
 .box {
+  display: flex;
+  flex-direction: column;
   background-color: rgba(255, 255, 255, 0.05);
   padding: 1em;
   margin-bottom: 1em;
@@ -162,42 +164,82 @@ main {
 .box > h2 {
   display: block;
   border-bottom: 2px solid rgba(255, 255, 255, 0.1);
-  border-right: 0;
-  border-left: 0;
   text-align: center;
   padding-bottom: 0.5em;
   margin-bottom: 1em;
 }
 
-#peers i {
-  display: none;
-  margin-top: 5px;
-  margin-bottom: 5px;
-  font-size: 14px;
+/* Daemon
+   =========================================================================== */
+
+.box.daemon > div {
+  display: flex;
+  margin-bottom: 1em;
 }
 
-#peers.waiting i {
-  display: block;
+.box.daemon > div:last-child {
+  margin-bottom: 0;
 }
 
-#errors {
-  grid-area: errors;
+.box.daemon > div > h3 {
+  flex: 0 0 15%;
+}
+
+.box.daemon > div > pre,
+.box.daemon > div > ul {
+  flex: 0 0 85%;
+  margin: 0;
+}
+
+.box.daemon ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.box.daemon ul li {
+  font-size: 0.7em;
+  font-family: monospace;
+  word-wrap: break-word;
+}
+
+#logs {
+  margin: 0;
   color: red;
   font-style: italic;
-  font-size: 1.125em;
+}
+
+#logs.success {
+    color: #6acad1;
+}
+
+/* Peers
+   =========================================================================== */
+
+#peers {
+  flex: 0 0 calc(35% - 1em);
+}
+
+#peers.waiting > pre {
   display: block;
-  margin: 0 0 1em;
 }
 
-#errors.hidden {
+#peers > pre {
   display: none;
+  margin-top: 3em;
+  text-align: center;
 }
 
-#note {
-  position: absolute;
-  top: 1em;
-  right: 1em;
-  font-size: 0.625em;
+#peers > table td {
+  text-align: left;
+}
+
+/* Files
+   =========================================================================== */
+
+#files {
+  flex: 0 0 65%;
+  min-height: 600px;
 }
 
 #file-status {
@@ -207,41 +249,49 @@ main {
   margin: 1em 0;
 }
 
-table {
-  width: 100%;
-  margin: 1em 0;
-  word-break: break-all;
-  border-collapse: collapse;
-}
-
-table thead {
-  background-color: rgba(255, 255, 255, 0.1);
-  font-weight: normal
-}
-
-table th, table td {
-  padding: 0.5em 0;
-}
-
-table td:last-child,
-table th:last-child {
-  width: 20%;
+#files > table > tbody > tr > td {
   text-align: center;
 }
 
-table td:first-child {
-  width: 45%;
-}
-
-table td:nth-child(2) {
+#files table th:nth-child(1),
+#files table td:nth-child(1) {
   width: 35%;
-  font-family: monospace;
 }
 
-table tr:hover {
-  background-color: rgba(0, 0, 0, 0.2)
+#files table th:nth-child(2),
+#files table td:nth-child(2) {
+  width: 50%;
 }
 
-table a {
-  color: inherit;
+#files table th:nth-child(3),
+#files table td:nth-child(3) {
+  width: 15%;
+}
+
+#drag-container {
+  position: relative;
+  display: flex;
+  flex: 1 1 auto;
+}
+
+.dragover-popup {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  opacity: 0.7;
+  z-index: -1;
+}
+
+/* ===========================================================================
+   Responsiveness
+   =========================================================================== */
+
+@media (max-width: 768px) {
+  .columns {
+    flex-direction: column-reverse;
+  }
 }

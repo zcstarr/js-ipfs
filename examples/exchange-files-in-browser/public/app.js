@@ -1,13 +1,11 @@
 /* global self */
 'use strict'
 
-const $startButton = document.querySelector('#start')
-const $stopButton = document.querySelector('#stop')
 const $peers = document.querySelector('#peers')
-const $peersList = $peers.querySelector('ul')
-const $errors = document.querySelector('#errors')
+const $peersList = $peers.querySelector('tbody')
+const $logs = document.querySelector('#logs')
+const $files = document.querySelector('#files')
 const $fileHistory = document.querySelector('#file-history tbody')
-const $fileStatus = document.querySelector('#file-status')
 const $multihashInput = document.querySelector('#multihash')
 const $catButton = document.querySelector('#cat')
 const $connectPeer = document.querySelector('#peer-input')
@@ -23,14 +21,12 @@ let node
 let info
 let Buffer
 
-/*
- * Start and stop the IPFS node
- */
+/* ===========================================================================
+   Start and stop the IPFS node
+   =========================================================================== */
 
 function start () {
   if (!node) {
-    updateView('starting', node)
-
     const options = {
       repo: 'ipfs-' + Math.random() + Date.now().toString(),
       config: {
@@ -64,10 +60,6 @@ function start () {
   }
 }
 
-function stop () {
-  window.location.href = window.location.href // refresh page
-}
-
 function appendFile (name, hash, size, data) {
   const file = new window.Blob([data], { type: 'application/octet-binary' })
   const url = window.URL.createObjectURL(file)
@@ -98,8 +90,6 @@ function getFile () {
 
   $multihashInput.value = ''
 
-  $errors.classList.add('hidden')
-
   if (!cid) { return console.log('no multihash was inserted') }
 
   node.files.get(cid, (err, files) => {
@@ -113,12 +103,12 @@ function getFile () {
   })
 }
 
-/*
- * Drag and drop
- */
+/* ===========================================================================
+   Drag & Drop
+   =========================================================================== */
+
 function onDrop (event) {
   onDragExit()
-  $errors.classList.add('hidden')
   event.preventDefault()
 
   if (!node) {
@@ -150,16 +140,17 @@ function onDrop (event) {
           if (err) { return onError(err) }
 
           $multihashInput.value = filesAdded[0].hash
-          $fileStatus.innerHTML = `${file.name} added! Try to hit 'Fetch' button!`
+          $logs.classList.add('success')
+          $logs.innerHTML = `${file.name} added! Try to hit 'Fetch' button!`
         })
       })
       .catch(onError)
   })
 }
 
-/*
- * Network related functions
- */
+/* ===========================================================================
+   Network related functions
+   =========================================================================== */
 
 // Get peers from IPFS and display them
 
@@ -193,7 +184,7 @@ function refreshPeerList () {
         }
       })
       .map((addr) => {
-        return '<li>' + addr + '</li>'
+        return '<tr><td>' + addr + '</td></tr>'
       }).join('')
 
     if (peers.length === 0) {
@@ -205,9 +196,9 @@ function refreshPeerList () {
   })
 }
 
-/*
- * UI functions
- */
+/* ===========================================================================
+   UI functions
+   =========================================================================== */
 
 function onError (err) {
   let msg = 'An error occured, check the dev console'
@@ -218,23 +209,24 @@ function onError (err) {
     msg = err
   }
 
-  $errors.innerHTML = msg
-  $errors.classList.remove('hidden')
+  $logs.classList.remove('success')
+  $logs.innerHTML = msg
 }
 
 window.onerror = onError
 
 function onDragEnter () {
-  $body.classList.add('dragging')
+  $files.classList.add('dragging')
 }
 
 function onDragExit () {
-  $body.classList.remove('dragging')
+  $files.classList.remove('dragging')
 }
 
-/*
- * App states
- */
+/* ===========================================================================
+   App states
+   =========================================================================== */
+
 const states = {
   ready: () => {
     const addressesHtml = info.addresses.map((address) => {
@@ -245,11 +237,6 @@ const states = {
     $allDisabledButtons.forEach(b => { b.disabled = false })
     $allDisabledInputs.forEach(b => { b.disabled = false })
     $allDisabledElements.forEach(el => { el.classList.remove('disabled') })
-    $stopButton.disabled = false
-    $startButton.disabled = true
-  },
-  starting: () => {
-    $startButton.disabled = true
   }
 }
 
@@ -261,19 +248,19 @@ function updateView (state, ipfs) {
   }
 }
 
-/*
- * Boot this application!
- */
+/* ===========================================================================
+   Boot the app
+   =========================================================================== */
+
 const startApplication = () => {
   // Setup event listeners
-  $body.addEventListener('dragenter', onDragEnter)
-  $body.addEventListener('drop', onDrop)
-  $body.addEventListener('dragleave', onDragExit)
-
-  $startButton.addEventListener('click', start)
-  $stopButton.addEventListener('click', stop)
+  $files.addEventListener('dragenter', onDragEnter)
+  $files.addEventListener('drop', onDrop)
+  $files.addEventListener('dragleave', onDragExit)
   $catButton.addEventListener('click', getFile)
   $connectPeerButton.addEventListener('click', connectToPeer)
+
+  start();
 }
 
 startApplication()

@@ -7,64 +7,82 @@
   </head>
 
   <body ondragover="event.preventDefault()">
-    <div class="dragover-popup">
-      <h1>Drop file to upload</h1>
-    </div>
-
     <header>
-      <h1>IPFS | InterPlanetary File Exchange</h1>
-      <i id="note">P.S. drop files anywhere to upload them!</i>
+      <img width=200 src="ipfs-logo.svg" alt="IPFS" />
+      <!-- <h1>InterPlanetary File Exchange</h1> -->
     </header>
 
     <main>
-      <pre id="errors" class="hidden"></pre>
+      <div class="box daemon">
+        <h2>Daemon</h2>
 
-      <div class="columns">
         <div>
-          <div class="box">
-            <h2>Your daemon</h2>
-            <div class="buttons">
-              <button id="start" type="button">Start IPFS</button>
-              <button id="stop" disabled type="button">Stop IPFS</button>
-            </div>
-            <div class="disabled">
-              <h3>ID</h3>
-              <pre class='id-container'>N/A</pre>
-              <h3>Addresses</h3>
-              <ul class='addresses-container'>
-                <li>Not yet online</li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="box disabled" id="peers">
-            <h2>Peers</h2>
-            <input disabled type="text" id="peer-input" placeholder="Multiaddr"/>
-            <button disabled id="peer-btn" class="full">Connect to peer</button>
-            <i>Waiting for peers...</i>
-            <ul></ul>
-          </div>
+          <h3>ID</h3>
+          <pre class="id-container">Initializing daemon...</pre>
         </div>
 
-        <div class="box disabled">
-          <h2>Files</h2>
+        <div>
+          <h3>Addresses</h3>
+          <ul class="addresses-container"></ul>
+        </div>
 
-          <input disabled id="multihash" type="text" placeholder="Multihash"/>
-          <button disabled id="cat" type="button" class="full">Fetch</button>
-          
-          <p id="file-status"></p>
+        <div>
+          <h3>Logs</h3>
+          <div>
+            <pre id="logs"></pre>
+          </div>
+        </div>
+      </div>
 
-          <table id="file-history">
+
+      <div class="columns">
+        <div id="peers" class="box disabled">
+          <h2>Peers</h2>
+
+          <div class="input-button">
+            <input disabled type="text" id="peer-input" placeholder="Multiaddr"/>
+            <button id="peer-btn" disabled>Connect</button>
+          </div>
+
+          <pre>Waiting for peers...</pre>
+
+          <table>
             <thead>
               <tr>
-                <th>Name</th>
-                <th>CID</th>
-                <th>Size</th>
+                <th>Multiaddr</th>
               </tr>
             </thead>
             <tbody></tbody>
           </table>
         </div>
+
+        <div id="files" class="box disabled" ondragover="event.preventDefault()">
+          <h2>Files</h2>
+
+          <div class="input-button">
+            <input id="multihash" type="text" placeholder="Multihash" disabled />
+            <button id="cat" type="button" disabled>Fetch</button>
+          </div>
+
+          <div id="drag-container">
+            <div class="dragover-popup">
+              <img width=100 src="upload.svg" alt="Upload" />
+              <p><b>Drag &amp; drop</b> a file to upload it.</p>
+            </div>
+
+            <table id="file-history">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>CID</th>
+                  <th>Size</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </main>
 
     <!-- The IPFS node module -->
