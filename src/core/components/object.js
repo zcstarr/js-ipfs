@@ -196,13 +196,15 @@ module.exports = function object (self) {
       if (options.cidVersion === 1) {
         cid = cid.toV1()
       }
+      // NOTE options are set to only node for compatibility reasons
+      options.onlyNode = true
 
-      self._ipld.get(cid, (err, result) => {
+      self._ipld.get(cid, options, (err, result) => {
         if (err) {
           return callback(err)
         }
 
-        const node = result.value
+        const node = result[0].value
 
         callback(null, node)
       })

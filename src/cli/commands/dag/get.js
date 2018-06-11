@@ -34,7 +34,6 @@ module.exports = {
         print('resolving path within the node only')
         print(`remainder path: ${result.remainderPath || 'n/a'}\n`)
       }
-
       const node = result.value
 
       // TODO we need to find* a way to pretty print objects

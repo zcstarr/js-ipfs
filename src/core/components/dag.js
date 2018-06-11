@@ -34,8 +34,16 @@ module.exports = function dag (self) {
           path = '/'
         }
       }
+      // This should be removed when js-ipfs is refactored
+      // to return an array of results
+      options.onlyNode = true
 
-      self._ipld.get(cid, path, options, callback)
+      self._ipld.get(cid, path, options, (err, result) => {
+        if (err) {
+          return callback(err)
+        }
+        callback(null, result[0])
+      })
     }),
 
     tree: promisify((cid, path, options, callback) => {
